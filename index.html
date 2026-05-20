@@ -1,0 +1,2233 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta
+name="viewport"
+content="width=device-width, initial-scale=1.0">
+
+<title>ÆSIR NODE 617</title>
+
+<link rel="preconnect"
+href="https://fonts.googleapis.com">
+
+<link rel="preconnect"
+href="https://fonts.gstatic.com"
+crossorigin>
+
+<link
+href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700&display=swap"
+rel="stylesheet">
+
+<style>
+
+/* =====================================================
+ROOT
+===================================================== */
+
+:root{
+
+    --cyan:#00eaff;
+
+    --red:#ff3a68;
+
+    --magenta:#ff4fd8;
+
+    --bg:#050816;
+
+    --panel:rgba(0,0,0,0.35);
+
+    --border:rgba(0,234,255,0.2);
+}
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+html,
+body{
+
+    width:100%;
+    height:100%;
+
+    overflow:hidden;
+
+    background:black;
+
+    font-family:'Orbitron',sans-serif;
+}
+
+/* =====================================================
+BOOT SCREEN
+===================================================== */
+
+.bootScreen{
+
+    position:fixed;
+    inset:0;
+
+    background:black;
+
+    z-index:5000;
+
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+
+    transition:1.5s ease;
+}
+
+.bootLogo{
+
+    color:var(--cyan);
+
+    font-size:5rem;
+
+    letter-spacing:16px;
+
+    text-shadow:
+    0 0 25px rgba(0,234,255,0.5);
+
+    animation:pulse 2s infinite;
+}
+
+.bootStatus{
+
+    margin-top:30px;
+
+    color:white;
+
+    letter-spacing:4px;
+
+    opacity:0.7;
+}
+
+@keyframes pulse{
+
+    0%{opacity:0.6;}
+    50%{opacity:1;}
+    100%{opacity:0.6;}
+}
+
+/* =====================================================
+BACKGROUND
+===================================================== */
+
+.background{
+
+    position:fixed;
+    inset:0;
+
+    background:
+
+    linear-gradient(
+        rgba(0,0,0,0.45),
+        rgba(0,0,0,0.82)
+    ),
+
+    url("img/bg.jpg");
+
+    background-size:cover;
+    background-position:center;
+
+    filter:
+    saturate(1.05)
+    brightness(0.7);
+
+    transform:scale(1.03);
+}
+
+/* =====================================================
+CURSOR GLOW
+===================================================== */
+
+.cursorGlow{
+
+    position:fixed;
+
+    width:300px;
+    height:300px;
+
+    border-radius:50%;
+
+    pointer-events:none;
+
+    z-index:1;
+
+    background:
+    radial-gradient(
+        circle,
+        rgba(0,234,255,0.08),
+        transparent 70%
+    );
+
+    transform:
+    translate(-50%,-50%);
+
+    transition:
+    transform 0.08s linear;
+}
+
+/* =====================================================
+NOISE
+===================================================== */
+
+.noise{
+
+    position:fixed;
+    inset:0;
+
+    z-index:2;
+
+    opacity:0.05;
+
+    pointer-events:none;
+
+    background-image:
+    repeating-radial-gradient(
+        circle at center,
+        rgba(255,255,255,0.05) 0,
+        rgba(255,255,255,0.05) 1px,
+        transparent 1px,
+        transparent 2px
+    );
+
+    background-size:4px 4px;
+
+    animation:noiseMove 0.15s infinite;
+}
+
+@keyframes noiseMove{
+
+    0%{transform:translate(0,0);}
+    25%{transform:translate(1px,-1px);}
+    50%{transform:translate(-1px,1px);}
+    75%{transform:translate(1px,1px);}
+    100%{transform:translate(0,0);}
+}
+
+/* =====================================================
+GRID
+===================================================== */
+
+.grid{
+
+    position:fixed;
+    inset:0;
+
+    z-index:3;
+
+    opacity:0.12;
+
+    pointer-events:none;
+
+    background-image:
+
+    linear-gradient(
+        rgba(0,234,255,0.05) 1px,
+        transparent 1px
+    ),
+
+    linear-gradient(
+        90deg,
+        rgba(0,234,255,0.05) 1px,
+        transparent 1px
+    );
+
+    background-size:40px 40px;
+
+    transform:
+    perspective(700px)
+    rotateX(75deg);
+
+    transform-origin:center top;
+
+    animation:gridMove 10s linear infinite;
+}
+
+@keyframes gridMove{
+
+    from{
+
+        transform:
+        perspective(700px)
+        rotateX(75deg)
+        translateY(0);
+    }
+
+    to{
+
+        transform:
+        perspective(700px)
+        rotateX(75deg)
+        translateY(40px);
+    }
+}
+
+/* =====================================================
+SCANLINES
+===================================================== */
+
+.scanlines{
+
+    position:fixed;
+    inset:0;
+
+    z-index:4;
+
+    pointer-events:none;
+
+    background:
+    repeating-linear-gradient(
+        to bottom,
+        rgba(255,255,255,0.02),
+        rgba(255,255,255,0.02) 1px,
+        transparent 1px,
+        transparent 3px
+    );
+
+    mix-blend-mode:soft-light;
+
+    animation:flicker 0.1s infinite;
+}
+
+@keyframes flicker{
+
+    0%{opacity:0.95;}
+    50%{opacity:1;}
+    100%{opacity:0.97;}
+}
+
+/* =====================================================
+INTERFERENCE
+===================================================== */
+
+.interference{
+
+    position:fixed;
+    inset:0;
+
+    z-index:5;
+
+    pointer-events:none;
+
+    opacity:0.16;
+
+    mix-blend-mode:screen;
+
+    background:
+
+    repeating-linear-gradient(
+        to bottom,
+        rgba(255,255,255,0.02),
+        rgba(255,255,255,0.02) 1px,
+        transparent 1px,
+        transparent 4px
+    );
+
+    animation:
+    interferenceFlicker 0.12s infinite,
+    interferenceShift 6s linear infinite;
+}
+
+.interference::before{
+
+    content:"";
+
+    position:absolute;
+    inset:0;
+
+    background:
+    linear-gradient(
+        90deg,
+        transparent,
+        rgba(0,255,255,0.04),
+        transparent
+    );
+
+    animation:
+    interferenceSweep 4s linear infinite;
+}
+
+@keyframes interferenceFlicker{
+
+    0%{opacity:0.16;}
+    50%{opacity:0.22;}
+    100%{opacity:0.18;}
+}
+
+@keyframes interferenceShift{
+
+    0%{transform:translateX(0);}
+    25%{transform:translateX(1px);}
+    50%{transform:translateX(-1px);}
+    75%{transform:translateX(1px);}
+    100%{transform:translateX(0);}
+}
+
+@keyframes interferenceSweep{
+
+    from{
+        transform:translateX(-100%);
+    }
+
+    to{
+        transform:translateX(100%);
+    }
+}
+
+/* =====================================================
+HEADER
+===================================================== */
+
+.header{
+
+    position:absolute;
+
+    top:25px;
+    left:40px;
+    right:40px;
+
+    z-index:20;
+
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-start;
+}
+
+.logo{
+
+    display:flex;
+    gap:18px;
+    align-items:center;
+}
+
+.logoMain{
+
+    color:white;
+
+    font-size:3rem;
+
+    letter-spacing:12px;
+
+    text-shadow:
+    0 0 15px rgba(0,234,255,0.5);
+}
+
+.logoSub{
+
+    display:flex;
+    flex-direction:column;
+}
+
+.logoSub .node{
+
+    color:var(--red);
+
+    font-size:2rem;
+
+    letter-spacing:4px;
+}
+
+.logoSub .online{
+
+    color:var(--cyan);
+
+    letter-spacing:4px;
+}
+
+.version{
+
+    text-align:right;
+
+    color:var(--cyan);
+
+    line-height:1.6;
+
+    letter-spacing:3px;
+}
+
+/* =====================================================
+PANELS
+===================================================== */
+
+.panel{
+
+    position:absolute;
+
+    z-index:20;
+
+    background:var(--panel);
+
+    border:1px solid var(--border);
+
+    backdrop-filter:blur(12px);
+
+    box-shadow:
+    0 0 25px rgba(0,234,255,0.08);
+
+    overflow:hidden;
+
+    padding:22px;
+
+    opacity:0;
+
+    animation:
+    panelEnter 1.5s forwards;
+}
+
+.leftPanel{
+    animation-delay:0.4s;
+}
+
+.centerPanel{
+    animation-delay:0.8s;
+}
+
+.rightPanel{
+    animation-delay:1.2s;
+}
+
+.logPanel{
+    animation-delay:1.6s;
+}
+
+@keyframes panelEnter{
+
+    from{
+        opacity:0;
+        transform:translateY(30px);
+    }
+
+    to{
+        opacity:1;
+        transform:translateY(0);
+    }
+}
+
+.panel::before{
+
+    content:"";
+
+    position:absolute;
+    inset:0;
+
+    background:
+    linear-gradient(
+        120deg,
+        transparent,
+        rgba(0,234,255,0.04),
+        transparent
+    );
+
+    transform:translateX(-100%);
+
+    animation:panelScan 5s linear infinite;
+}
+
+@keyframes panelScan{
+
+    to{
+        transform:translateX(100%);
+    }
+}
+
+.panelTitle{
+
+    color:var(--cyan);
+
+    font-size:1.5rem;
+
+    margin-bottom:20px;
+
+    letter-spacing:3px;
+}
+
+/* =====================================================
+LEFT PANEL
+===================================================== */
+
+.leftPanel{
+
+    top:110px;
+    left:40px;
+
+    width:290px;
+    height:620px;
+}
+
+.circle{
+
+    width:180px;
+    height:180px;
+
+    margin:auto;
+
+    border-radius:50%;
+
+    border:1px solid rgba(0,234,255,0.4);
+
+    position:relative;
+
+    margin-top:10px;
+
+    animation:rotateCircle 14s linear infinite;
+}
+
+.circle::before{
+
+    content:"";
+
+    position:absolute;
+
+    inset:18px;
+
+    border-radius:50%;
+
+    border:1px solid rgba(0,234,255,0.2);
+}
+
+@keyframes rotateCircle{
+
+    from{
+        transform:rotate(0deg);
+    }
+
+    to{
+        transform:rotate(360deg);
+    }
+}
+
+.statusText{
+
+    margin-top:40px;
+
+    line-height:2.2;
+
+    color:var(--cyan);
+
+    font-size:1.1rem;
+}
+
+.integrity{
+
+    font-size:3rem;
+
+    margin-top:10px;
+}
+
+/* =====================================================
+CENTER PANEL
+===================================================== */
+
+.centerPanel{
+
+    position:absolute;
+
+    top:110px;
+    left:360px;
+    right:360px;
+    bottom:220px;
+
+    z-index:10;
+
+    overflow:hidden;
+
+    border:1px solid rgba(0,234,255,0.18);
+}
+
+.centerImage{
+
+    position:absolute;
+    inset:0;
+
+    background:
+
+    linear-gradient(
+        rgba(0,0,0,0.2),
+        rgba(0,0,0,0.45)
+    ),
+
+    url("img/bg.jpg");
+
+    background-size:cover;
+    background-position:center;
+
+    animation:
+    slowZoom 20s linear infinite,
+    signalDrift 8s ease-in-out infinite;
+}
+
+@keyframes slowZoom{
+
+    from{
+        transform:scale(1);
+    }
+
+    to{
+        transform:scale(1.08);
+    }
+}
+
+@keyframes signalDrift{
+
+    0%{
+        transform:
+        scale(1)
+        translateX(0);
+    }
+
+    25%{
+        transform:
+        scale(1.01)
+        translateX(2px);
+    }
+
+    50%{
+        transform:
+        scale(1.02)
+        translateX(-2px);
+    }
+
+    75%{
+        transform:
+        scale(1.01)
+        translateX(1px);
+    }
+
+    100%{
+        transform:
+        scale(1)
+        translateX(0);
+    }
+}
+
+.neuralScan{
+
+    position:absolute;
+    inset:0;
+
+    background:
+    linear-gradient(
+        to bottom,
+        transparent,
+        rgba(0,234,255,0.08),
+        transparent
+    );
+
+    animation:
+    neuralScanMove 4s linear infinite;
+
+    mix-blend-mode:screen;
+}
+
+@keyframes neuralScanMove{
+
+    from{
+        transform:translateY(-100%);
+    }
+
+    to{
+        transform:translateY(100%);
+    }
+}
+
+.centerOverlay{
+
+    position:absolute;
+    inset:0;
+
+    background:
+    radial-gradient(
+        circle at center,
+        rgba(255,0,90,0.15),
+        transparent 55%
+    );
+}
+
+.centerText{
+
+    position:absolute;
+
+    top:35px;
+    left:50%;
+
+    transform:translateX(-50%);
+
+    color:var(--cyan);
+
+    font-size:2rem;
+
+    letter-spacing:5px;
+}
+
+.systemWarning{
+
+    position:absolute;
+
+    top:78px;
+    left:50%;
+
+    transform:translateX(-50%);
+
+    color:#00ffae;
+
+    letter-spacing:4px;
+
+    font-size:0.9rem;
+
+    opacity:0.8;
+}
+
+.archiveID{
+
+    position:absolute;
+
+    top:120px;
+    right:25px;
+
+    color:
+    rgba(255,255,255,0.45);
+
+    letter-spacing:3px;
+
+    font-size:0.8rem;
+}
+
+.bootText{
+
+    position:absolute;
+
+    top:100px;
+    left:30px;
+
+    color:white;
+
+    line-height:2;
+
+    opacity:0.9;
+
+    letter-spacing:2px;
+}
+
+/* =====================================================
+LOG PANEL
+===================================================== */
+
+.logPanel{
+
+    position:absolute;
+
+    left:360px;
+    right:360px;
+    bottom:130px;
+
+    height:180px;
+}
+
+.logText{
+
+    height:105px;
+
+    overflow:hidden;
+
+    line-height:2;
+
+    color:#dffaff;
+
+    opacity:0.9;
+
+    font-size:1rem;
+}
+
+/* =====================================================
+RIGHT PANEL
+===================================================== */
+
+.rightPanel{
+
+    top:110px;
+    right:40px;
+
+    width:290px;
+    height:620px;
+}
+
+.archiveLabel{
+
+    color:var(--magenta);
+
+    text-shadow:
+    0 0 10px rgba(255,79,216,0.35);
+
+    letter-spacing:1px;
+}
+
+.corrupt{
+
+    color:var(--red);
+
+    font-size:2rem;
+
+    margin-top:10px;
+}
+
+.recovery{
+
+    margin-top:30px;
+
+    color:var(--cyan);
+
+    font-size:1.3rem;
+}
+
+.percent{
+
+    font-size:4rem;
+
+    margin-top:10px;
+}
+
+.progress{
+
+    width:100%;
+    height:14px;
+
+    margin-top:20px;
+
+    overflow:hidden;
+
+    border:1px solid rgba(0,234,255,0.3);
+}
+
+.progressFill{
+
+    width:0%;
+    height:100%;
+
+    background:
+    linear-gradient(
+        90deg,
+        #00eaff,
+        #7df9ff
+    );
+
+    box-shadow:
+    0 0 20px rgba(0,234,255,0.5);
+
+    transition:0.4s ease;
+}
+
+/* =====================================================
+BOTTOM STATUS
+===================================================== */
+
+.bottomStatus{
+
+    position:absolute;
+
+    left:40px;
+    right:40px;
+    bottom:35px;
+
+    z-index:20;
+
+    color:rgba(255,255,255,0.5);
+
+    display:flex;
+    justify-content:space-between;
+
+    letter-spacing:2px;
+
+    font-size:0.9rem;
+}
+
+/* =====================================================
+WATERMARK
+===================================================== */
+
+.watermark{
+
+    position:fixed;
+
+    right:25px;
+    bottom:12px;
+
+    z-index:50;
+
+    color:rgba(255,255,255,0.2);
+
+    letter-spacing:4px;
+
+    font-size:0.7rem;
+}
+
+/* =====================================================
+WARNING FLASH
+===================================================== */
+
+.warningFlash{
+
+    position:fixed;
+    inset:0;
+
+    background:
+    radial-gradient(
+        circle at center,
+        rgba(255,0,90,0.12),
+        transparent 60%
+    );
+
+    z-index:6;
+
+    opacity:0;
+
+    pointer-events:none;
+}
+
+.warningFlash.active{
+
+    animation:redPulse 1.2s ease;
+}
+
+@keyframes redPulse{
+
+    0%{opacity:0;}
+    50%{opacity:1;}
+    100%{opacity:0;}
+}
+
+/* =====================================================
+FLASH
+===================================================== */
+
+.flash{
+
+    position:fixed;
+    inset:0;
+
+    background:white;
+
+    z-index:999;
+
+    opacity:0;
+
+    pointer-events:none;
+}
+
+.flash.active{
+
+    animation:flashAnim 0.8s ease;
+}
+
+@keyframes flashAnim{
+
+    0%{opacity:0;}
+    25%{opacity:1;}
+    100%{opacity:0;}
+}
+
+/* =====================================================
+SIGNAL LOSS
+===================================================== */
+
+.signalLoss{
+
+    position:fixed;
+    inset:0;
+
+    background:black;
+
+    z-index:9000;
+
+    opacity:0;
+
+    pointer-events:none;
+}
+
+.signalLoss.active{
+
+    animation:signalLossAnim 2.5s forwards;
+}
+
+@keyframes signalLossAnim{
+
+    0%{
+        opacity:0;
+    }
+
+    10%{
+        opacity:1;
+    }
+
+    20%{
+        opacity:0.4;
+    }
+
+    30%{
+        opacity:1;
+    }
+
+    100%{
+        opacity:1;
+    }
+}
+
+/* =====================================================
+VIDEO OVERLAY
+===================================================== */
+
+.videoOverlay{
+
+    position:fixed;
+    inset:0;
+
+    z-index:10000;
+
+    background:black;
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    opacity:0;
+
+    pointer-events:none;
+
+    transition:1s ease;
+}
+
+.videoOverlay.active{
+
+    opacity:1;
+
+    pointer-events:auto;
+}
+
+.playbackBoot{
+
+    position:absolute;
+
+    z-index:2000;
+
+    color:var(--cyan);
+
+    font-size:1.2rem;
+
+    letter-spacing:3px;
+
+    line-height:2.5;
+
+    text-align:center;
+
+    opacity:1;
+
+    transition:1s ease;
+}
+
+.bootLine{
+
+    opacity:0;
+
+    animation:bootFade 1s forwards;
+}
+
+.bootLine:nth-child(1){
+    animation-delay:0.3s;
+}
+
+.bootLine:nth-child(2){
+    animation-delay:1.2s;
+}
+
+.bootLine:nth-child(3){
+    animation-delay:2.1s;
+}
+
+@keyframes bootFade{
+
+    from{
+        opacity:0;
+        transform:translateY(10px);
+    }
+
+    to{
+        opacity:1;
+        transform:translateY(0);
+    }
+}
+
+.videoFrame{
+
+    width:100%;
+    height:100%;
+
+    object-fit:cover;
+
+    opacity:0;
+
+    transition:1.5s ease;
+
+    background:black;
+
+    filter:
+    contrast(1.05)
+    brightness(0.95)
+    saturate(1.05);
+}
+
+/* =====================================================
+FRAGMENT POPUP
+===================================================== */
+
+.fragmentPopup{
+
+    position:fixed;
+
+    top:40px;
+    left:50%;
+
+    transform:
+    translateX(-50%)
+    translateY(-30px);
+
+    background:
+    rgba(0,0,0,0.7);
+
+    border:
+    1px solid rgba(0,234,255,0.25);
+
+    color:var(--cyan);
+
+    padding:18px 28px;
+
+    letter-spacing:4px;
+
+    z-index:9999;
+
+    opacity:0;
+
+    backdrop-filter:blur(10px);
+}
+
+.fragmentPopup.active{
+
+    animation:fragmentPopupAnim 3s ease;
+}
+
+@keyframes fragmentPopupAnim{
+
+    0%{
+        opacity:0;
+        transform:
+        translateX(-50%)
+        translateY(-30px);
+    }
+
+    15%{
+        opacity:1;
+        transform:
+        translateX(-50%)
+        translateY(0);
+    }
+
+    85%{
+        opacity:1;
+        transform:
+        translateX(-50%)
+        translateY(0);
+    }
+
+    100%{
+        opacity:0;
+        transform:
+        translateX(-50%)
+        translateY(-20px);
+    }
+}
+
+/* =====================================================
+DECODE POPUP
+===================================================== */
+
+.decodePopup{
+
+    position:fixed;
+
+    bottom:110px;
+    right:40px;
+
+    z-index:9999;
+
+    background:
+    rgba(0,0,0,0.7);
+
+    border:
+    1px solid rgba(0,234,255,0.2);
+
+    padding:
+    14px 22px;
+
+    color:var(--cyan);
+
+    letter-spacing:4px;
+
+    opacity:0;
+
+    transform:
+    translateY(20px);
+
+    backdrop-filter:blur(10px);
+}
+
+.decodePopup.active{
+
+    animation:
+    decodePopupAnim 2.8s ease;
+}
+
+@keyframes decodePopupAnim{
+
+    0%{
+        opacity:0;
+        transform:
+        translateY(20px);
+    }
+
+    15%{
+        opacity:1;
+        transform:
+        translateY(0);
+    }
+
+    85%{
+        opacity:1;
+        transform:
+        translateY(0);
+    }
+
+    100%{
+        opacity:0;
+        transform:
+        translateY(10px);
+    }
+}
+
+/* =====================================================
+FRAGMENT RAIN
+===================================================== */
+
+.fragmentRain{
+
+    position:fixed;
+    inset:0;
+
+    pointer-events:none;
+
+    z-index:7;
+
+    overflow:hidden;
+}
+
+.fragmentBit{
+
+    position:absolute;
+
+    color:rgba(0,234,255,0.18);
+
+    font-size:0.8rem;
+
+    letter-spacing:2px;
+
+    white-space:nowrap;
+
+    animation:fragmentFall linear forwards;
+}
+
+@keyframes fragmentFall{
+
+    from{
+
+        transform:
+        translateY(-10vh);
+
+        opacity:0;
+    }
+
+    10%{
+        opacity:1;
+    }
+
+    to{
+
+        transform:
+        translateY(110vh);
+
+        opacity:0;
+    }
+}
+
+/* =====================================================
+GLITCH
+===================================================== */
+
+.glitch{
+
+    animation:glitchFlash 0.15s 4;
+}
+
+@keyframes glitchFlash{
+
+    0%{
+        filter:hue-rotate(0deg);
+    }
+
+    50%{
+        filter:
+        hue-rotate(90deg)
+        brightness(1.25);
+    }
+
+    100%{
+        filter:hue-rotate(0deg);
+    }
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="bootScreen" id="bootScreen">
+
+    <div class="bootLogo">
+        ÆSIR
+    </div>
+
+    <div class="bootStatus" id="bootStatus">
+        INITIALIZING OA FRAMEWORK...
+    </div>
+
+</div>
+
+<div class="background"></div>
+
+<div class="cursorGlow"
+id="cursorGlow"></div>
+
+<div class="noise"></div>
+
+<div class="grid"></div>
+
+<div class="scanlines"></div>
+
+<div class="interference"></div>
+
+<div class="warningFlash"
+id="warningFlash"></div>
+
+<div class="flash"
+id="flash"></div>
+
+<div class="signalLoss"
+id="signalLoss"></div>
+
+<div class="fragmentRain"
+id="fragmentRain"></div>
+
+<div class="header">
+
+    <div class="logo">
+
+        <div class="logoMain">
+            ÆSIR
+        </div>
+
+        <div class="logoSub">
+
+            <div class="node">
+                NODE 617
+            </div>
+
+            <div class="online">
+                ONLINE
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="version">
+
+        OA OPERATING SYSTEM
+        <br>
+        v6.1.7
+
+    </div>
+
+</div>
+
+<div class="panel leftPanel">
+
+    <div class="panelTitle">
+        USER STATUS
+    </div>
+
+    <div class="circle"></div>
+
+    <div class="statusText">
+
+        USER: UNKNOWN
+
+        <br><br>
+
+        MEMORY INTEGRITY
+
+        <div class="integrity"
+        id="integrity">
+            0%
+        </div>
+
+        <br>
+
+        SIGNAL RECOVERY
+
+        <br>
+
+        ACTIVE
+
+    </div>
+
+</div>
+
+<div class="centerPanel">
+
+    <div class="centerImage"></div>
+
+    <div class="neuralScan"></div>
+
+    <div class="centerOverlay"></div>
+
+    <div class="centerText">
+        OA SYSTEM
+    </div>
+
+    <div class="systemWarning"
+    id="systemWarning">
+
+        SIGNAL STABLE
+
+    </div>
+
+    <div class="archiveID">
+
+        OA-617-PAFF-FRAGMENT-08
+
+    </div>
+
+    <div class="bootText"
+    id="decryptText">
+
+        > INITIALIZING NEURAL INTERFACE...
+
+    </div>
+
+</div>
+
+<div class="panel logPanel">
+
+    <div class="panelTitle">
+        OA SYSTEM LOG
+    </div>
+
+    <div class="logText"
+    id="logText"></div>
+
+</div>
+
+<div class="panel rightPanel">
+
+    <div class="panelTitle">
+        ARCHIVE DATA
+    </div>
+
+    <div class="archiveLabel">
+
+        FILE:
+        <br><br>
+
+        PAFF_memory_recovery.mp4
+
+        <br><br><br>
+
+        STATUS:
+
+    </div>
+
+    <div class="corrupt"
+    id="statusText">
+
+        CORRUPTED
+
+    </div>
+
+    <div class="recovery">
+
+        RECOVERY:
+
+        <div class="percent"
+        id="percent">
+
+            0%
+
+        </div>
+
+        <div class="progress">
+
+            <div class="progressFill"
+            id="progressFill"></div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<div class="bottomStatus">
+
+    <div>
+        ÆSIR FRAMEWORK ACTIVE
+    </div>
+
+    <div id="bottomMessage">
+        RECOVERING ARCHIVE DATA...
+    </div>
+
+    <div id="systemClock">
+        00:00:00
+    </div>
+
+</div>
+
+<div class="videoOverlay"
+id="videoOverlay">
+
+    <div class="playbackBoot"
+    id="playbackBoot">
+
+        <div class="bootLine">
+            DECRYPTING MEDIA STREAM...
+        </div>
+
+        <div class="bootLine">
+            RESTORING AUDIO CHANNEL...
+        </div>
+
+        <div class="bootLine">
+            INITIALIZING PLAYBACK...
+        </div>
+
+    </div>
+
+    <video
+    class="videoFrame"
+    id="videoPlayer"
+    playsinline>
+
+        <source
+        src="video/memory_fragment_08.mp4"
+        type="video/mp4">
+
+    </video>
+
+</div>
+
+<div class="fragmentPopup"
+id="fragmentPopup">
+
+    MEMORY FRAGMENT RECOVERED
+
+</div>
+
+<div class="decodePopup"
+id="decodePopup">
+
+    DATA DECODED
+
+</div>
+
+<div class="watermark">
+    OA COMMUNICATION NETWORK
+</div>
+
+<audio
+id="ambient"
+autoplay
+loop>
+
+<source
+src="audio/ambience.mp3"
+type="audio/mp3">
+
+</audio>
+
+<script>
+
+/* =====================================================
+ELEMENTS
+===================================================== */
+
+const logText =
+document.getElementById("logText");
+
+const percent =
+document.getElementById("percent");
+
+const integrity =
+document.getElementById("integrity");
+
+const progressFill =
+document.getElementById("progressFill");
+
+const statusText =
+document.getElementById("statusText");
+
+const bottomMessage =
+document.getElementById("bottomMessage");
+
+const flash =
+document.getElementById("flash");
+
+const videoOverlay =
+document.getElementById("videoOverlay");
+
+const videoPlayer =
+document.getElementById("videoPlayer");
+
+const signalLoss =
+document.getElementById("signalLoss");
+
+const systemWarning =
+document.getElementById("systemWarning");
+
+const warningFlash =
+document.getElementById("warningFlash");
+
+const cursorGlow =
+document.getElementById("cursorGlow");
+
+/* =====================================================
+CURSOR GLOW
+===================================================== */
+
+document.addEventListener(
+"mousemove",
+(e)=>{
+
+    cursorGlow.style.left =
+    e.clientX + "px";
+
+    cursorGlow.style.top =
+    e.clientY + "px";
+});
+
+/* =====================================================
+BOOT SEQUENCE
+===================================================== */
+
+const bootScreen =
+document.getElementById("bootScreen");
+
+const bootStatus =
+document.getElementById("bootStatus");
+
+const bootMessages = [
+
+"INITIALIZING OA FRAMEWORK...",
+"CONNECTING TO ÆSIR NETWORK...",
+"SCANNING ARCHIVE DATABASE...",
+"RECOVERING MEMORY FRAGMENTS...",
+"LAUNCHING NODE 617..."
+];
+
+let bootIndex = 0;
+
+const bootInterval =
+setInterval(()=>{
+
+    bootIndex++;
+
+    if(bootIndex >= bootMessages.length){
+
+        clearInterval(bootInterval);
+
+        setTimeout(()=>{
+
+            bootScreen.style.opacity = "0";
+
+            setTimeout(()=>{
+
+                bootScreen.style.display = "none";
+
+            },1500);
+
+        },1200);
+
+        return;
+    }
+
+    bootStatus.innerText =
+    bootMessages[bootIndex];
+
+},1400);
+
+/* =====================================================
+CLOCK
+===================================================== */
+
+function updateClock(){
+
+    const now =
+    new Date();
+
+    const h =
+    String(now.getHours())
+    .padStart(2,"0");
+
+    const m =
+    String(now.getMinutes())
+    .padStart(2,"0");
+
+    const s =
+    String(now.getSeconds())
+    .padStart(2,"0");
+
+    document.getElementById(
+    "systemClock"
+    ).innerText =
+    `${h}:${m}:${s}`;
+}
+
+setInterval(updateClock,1000);
+
+updateClock();
+
+/* =====================================================
+LOGS
+===================================================== */
+
+const logs = [
+
+"[ÆSIR] scanning memory sectors...",
+"[WARNING] emotional corruption detected...",
+"[RECOVERY] rebuilding archive fragments...",
+"[INFO] locating corrupted media...",
+"[INFO] neural synchronization active...",
+"[WARNING] instability detected...",
+"[ARCHIVE] hidden media stream found...",
+"[OA] playback reconstruction initialized...",
+"[SYSTEM] preparing recovered archive..."
+];
+
+let logIndex = 0;
+
+function addLog(text){
+
+    const line =
+    document.createElement("div");
+
+    line.innerText = text;
+
+    logText.appendChild(line);
+
+    logText.scrollTop =
+    logText.scrollHeight;
+}
+
+function cycleLogs(){
+
+    if(logIndex >= logs.length){
+        logIndex = 0;
+    }
+
+    addLog(logs[logIndex]);
+
+    logIndex++;
+}
+
+setInterval(cycleLogs,1400);
+
+/* =====================================================
+DECRYPT TEXT
+===================================================== */
+
+const decryptText =
+document.getElementById(
+"decryptText"
+);
+
+const decryptMessages = [
+
+"> INITIALIZING NEURAL INTERFACE...",
+"> SEARCHING MEMORY SECTORS...",
+"> RECOVERING EMOTIONAL ARCHIVES...",
+"> SIGNAL RECONSTRUCTION ACTIVE...",
+"> OA PLAYBACK ENGINE READY..."
+];
+
+let decryptIndex = 0;
+
+setInterval(()=>{
+
+    decryptIndex++;
+
+    if(decryptIndex >=
+    decryptMessages.length){
+
+        decryptIndex = 0;
+    }
+
+    decryptText.innerText =
+    decryptMessages[decryptIndex];
+
+},4000);
+
+/* =====================================================
+GLITCH
+===================================================== */
+
+function triggerGlitch(){
+
+    document.body.classList.remove("glitch");
+
+    void document.body.offsetWidth;
+
+    document.body.classList.add("glitch");
+}
+
+/* =====================================================
+WARNING FLASH
+===================================================== */
+
+function triggerWarningFlash(){
+
+    warningFlash.classList.remove(
+    "active"
+    );
+
+    void warningFlash.offsetWidth;
+
+    warningFlash.classList.add(
+    "active"
+    );
+}
+
+/* =====================================================
+POPUPS
+===================================================== */
+
+const fragmentPopup =
+document.getElementById(
+"fragmentPopup"
+);
+
+function triggerFragmentPopup(){
+
+    fragmentPopup.classList.remove(
+    "active"
+    );
+
+    void fragmentPopup.offsetWidth;
+
+    fragmentPopup.classList.add(
+    "active"
+    );
+}
+
+const decodePopup =
+document.getElementById(
+"decodePopup"
+);
+
+function triggerDecodePopup(){
+
+    decodePopup.classList.remove(
+    "active"
+    );
+
+    void decodePopup.offsetWidth;
+
+    decodePopup.classList.add(
+    "active"
+    );
+}
+
+/* =====================================================
+RECOVERY
+===================================================== */
+
+let recovery = 0;
+
+let recoveryFinished = false;
+
+function updateRecovery(){
+
+    if(recoveryFinished){
+        return;
+    }
+
+    if(recovery >= 82 && recovery <= 89){
+
+        recovery += 0.2;
+
+        triggerGlitch();
+
+        addLog(
+        "[WARNING] corruption resisting recovery..."
+        );
+    }
+
+    else{
+
+        recovery +=
+        Math.floor(Math.random()*5)+1;
+    }
+
+    if(recovery > 100){
+        recovery = 100;
+    }
+
+    percent.innerText =
+    Math.floor(recovery) + "%";
+
+    integrity.innerText =
+    Math.floor(recovery) + "%";
+
+    progressFill.style.width =
+    recovery + "%";
+
+    if(
+    Math.floor(recovery) === 25 ||
+    Math.floor(recovery) === 51 ||
+    Math.floor(recovery) === 77
+    ){
+        triggerFragmentPopup();
+    }
+
+    if(recovery > 55){
+
+        systemWarning.innerText =
+        "SIGNAL UNSTABLE";
+
+        systemWarning.style.color =
+        "#ffae00";
+    }
+
+    if(recovery > 80){
+
+        systemWarning.innerText =
+        "CRITICAL INSTABILITY";
+
+        systemWarning.style.color =
+        "#ff405f";
+    }
+
+    if(recovery > 92){
+
+        bottomMessage.innerText =
+        "FINALIZING MEDIA RECOVERY...";
+    }
+
+    if(recovery >= 100){
+
+        recoveryFinished = true;
+
+        statusText.innerText =
+        "RESTORED";
+
+        statusText.style.color =
+        "#00ffae";
+
+        addLog(
+        "[ARCHIVE] hidden media restored."
+        );
+
+        addLog(
+        "[OA] playback initialization complete."
+        );
+
+        bottomMessage.innerText =
+        "MEDIA PLAYBACK INITIALIZED";
+
+        setTimeout(() => {
+
+            triggerGlitch();
+
+        },1200);
+
+        setTimeout(() => {
+
+            flash.classList.add("active");
+
+        },1800);
+
+        setTimeout(() => {
+
+            signalLoss.classList.add(
+            "active"
+            );
+
+        },2600);
+
+        setTimeout(() => {
+
+            videoOverlay.classList.add(
+            "active"
+            );
+
+        },4200);
+
+        setTimeout(() => {
+
+            const boot =
+            document.getElementById(
+            "playbackBoot"
+            );
+
+            const ambient =
+            document.getElementById(
+            "ambient"
+            );
+
+            ambient.volume = 0.12;
+
+            boot.style.opacity = "0";
+
+            videoPlayer.style.opacity = "1";
+
+            videoPlayer.muted = true;
+
+            videoPlayer.play();
+
+            setTimeout(()=>{
+
+                videoPlayer.muted = false;
+
+            },800);
+
+        },6200);
+    }
+}
+
+setInterval(updateRecovery,900);
+
+/* =====================================================
+RANDOM WARNINGS
+===================================================== */
+
+const warnings = [
+
+"[WARNING] abnormal emotional signal detected...",
+"[WARNING] corrupted neural pathway found...",
+"[WARNING] unstable memory resonance...",
+"[WARNING] archive synchronization unstable..."
+];
+
+setInterval(()=>{
+
+    if(recovery > 45 && recovery < 90){
+
+        triggerWarningFlash();
+
+        addLog(
+        warnings[
+        Math.floor(
+        Math.random()*warnings.length
+        )]
+        );
+
+        if(Math.random() > 0.6){
+
+            triggerDecodePopup();
+        }
+    }
+
+},7000);
+
+/* =====================================================
+FRAGMENT RAIN
+===================================================== */
+
+const fragmentRain =
+document.getElementById(
+"fragmentRain"
+);
+
+const fragmentData = [
+
+"PAFF_08_FRAGMENT",
+"MEMORY_CORRUPTED",
+"OA_SIGNAL_LOST",
+"ARCHIVE_RESTORED",
+"NODE_617",
+"EMOTIONAL_DATA",
+"RECOVERY_ACTIVE",
+"ILKA_SYNC",
+"NEURAL_SIGNAL"
+];
+
+function spawnFragment(){
+
+    const bit =
+    document.createElement("div");
+
+    bit.className =
+    "fragmentBit";
+
+    bit.innerText =
+    fragmentData[
+    Math.floor(
+    Math.random()*fragmentData.length
+    )];
+
+    bit.style.left =
+    Math.random()*100 + "vw";
+
+    bit.style.animationDuration =
+    (6 + Math.random()*8) + "s";
+
+    bit.style.fontSize =
+    (0.7 + Math.random()*0.6)
+    + "rem";
+
+    fragmentRain.appendChild(bit);
+
+    setTimeout(()=>{
+
+        bit.remove();
+
+    },14000);
+}
+
+setInterval(spawnFragment,600);
+
+/* =====================================================
+AMBIENT GLITCH
+===================================================== */
+
+setInterval(()=>{
+
+    triggerGlitch();
+
+},9000);
+
+</script>
+
+</body>
+</html>
