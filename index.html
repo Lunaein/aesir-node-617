@@ -131,7 +131,7 @@ BACKGROUND
         rgba(0,0,0,0.82)
     ),
 
-    url("bg.jpg");
+    url("img/bg.jpg");
 
     background-size:cover;
     background-position:center;
@@ -176,7 +176,7 @@ CURSOR GLOW
 
 /* =====================================================
 NOISE
-==================================================== */
+===================================================== */
 
 .noise{
 
@@ -654,7 +654,7 @@ CENTER PANEL
         rgba(0,0,0,0.45)
     ),
 
-    url("bg.jpg");
+    url("img/bg.jpg");
 
     background-size:cover;
     background-position:center;
@@ -711,7 +711,6 @@ CENTER PANEL
 .neuralScan{
 
     position:absolute;
-
     inset:0;
 
     background:
@@ -868,6 +867,11 @@ RIGHT PANEL
     0 0 10px rgba(255,79,216,0.35);
 
     letter-spacing:1px;
+
+    font-size: 0.95rem;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    max-width: 100%;
 }
 
 .corrupt{
@@ -1642,7 +1646,7 @@ id="videoOverlay">
     playsinline>
 
         <source
-        src="memory_fragment_08.mp4" 
+        src="video/memory_fragment_08.mp4"
         type="video/mp4">
 
     </video>
@@ -1670,11 +1674,10 @@ id="decodePopup">
 <audio
 id="ambient"
 autoplay
-loop
-muted>
+loop>
 
 <source
-src="ambience.mp3"
+src="audio/ambience.mp3"
 type="audio/mp3">
 
 </audio>
@@ -1723,17 +1726,6 @@ document.getElementById("warningFlash");
 
 const cursorGlow =
 document.getElementById("cursorGlow");
-
-/* =====================================================
-AUDIO UNMUTE INTERACTION TRICK
-===================================================== */
-document.addEventListener("click", () => {
-    const ambient = document.getElementById("ambient");
-    if(ambient.muted) {
-        ambient.muted = false;
-        ambient.play().catch(err => console.log("Audio autoplay blocked:", err));
-    }
-}, { once: true });
 
 /* =====================================================
 CURSOR GLOW
